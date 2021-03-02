@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"-->
+<!--      integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">-->
+<link href="css/bootstrap.css" rel="stylesheet">
+<script src="https://unpkg.com/vue@next"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+        crossorigin="anonymous"></script>
+
+<body>
+<nav class="navbar navbar-dark">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1">Cypher</span>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 mt-5">
+            <div id="counter">
+                <input v-model="question" placeholder="Ask me anything" @change="search()"
+                       class="form-control form-control-lg" type="text" placeholder=".form-control-lg"
+                       aria-label=".form-control-lg example">
+                <hr>
+                <div class="row" v-if="relevantQ">
+                    <div class="col">
+                    <p class="lead">Most Relevant Question</p>
+                    <b>{{relevantQ}}</b>
+                    <hr>
+                        </div>
+                </div>
+                <div class="row" v-if="relevantA">
+                    <div class="col">
+                    <p class="lead">Answer</p>
+                    <b>{{relevantA}}</b>
+                </div>
+                    </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+
+<script>
+    const RFP_BOT = {
+        data() {
+            return {
+                question: '',
+                answer: '',
+                relevantQ: '',
+                relevantA: ''
+
+            }
+        },
+        methods: {
+            search() {
+                axios.get('http://127.0.0.1:5000/?question=' + this.question).then(
+                    response => (this.relevantQ = response['data'][0], this.relevantA = response['data'][1])
+                )
+            }
+        },
+        mounted() {
+        }
+    }
+
+
+    Vue.createApp(RFP_BOT).mount('#counter')
+
+
+</script>
+</html>
