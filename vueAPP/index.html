@@ -44,9 +44,17 @@
                     <div class="col">
                         <p class="lead">Answer</p>
                         <b>{{ relevantA }}</b>
+                        <hr>
                     </div>
                 </div>
-
+                <div class="row" v-if="responseData">
+                    <div class="col">
+                    <p class="lead">Related questions</p>
+                    <ul id="related-q-list">
+                        <li v-for="(item, index) in responseData"><a href="javascript:void(0)" @click="handleLinkClick(item[0])" >{{ item[0] }}</a> </li>
+                    </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -64,20 +72,25 @@
                 question: '',
                 answer: '',
                 relevantQ: '',
-                relevantA: ''
+                relevantA: '',
+                responseData: ''
 
             }
         },
         methods: {
             search() {
                 axios.get('http://34.89.136.238:8000/?question=' + this.question).then(
-                    response => (this.relevantQ = response['data'][0], this.relevantA = response['data'][1])
+                    response => (this.relevantQ = response['data'][0][0], this.relevantA = response['data'][0][1], this.responseData = response['data'])
                 )
+            },
+            handleLinkClick(item){
+                this.question = item;
+                this.search()
             }
         },
         mounted() {
         }
-    }
+    };
 
 
     Vue.createApp(RFP_BOT).mount('#counter')
