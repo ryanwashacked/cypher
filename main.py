@@ -1,5 +1,5 @@
 from bert_serving.client import BertClient
-from questions import questions, answers
+from read_questions_csv import questions, answers
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
