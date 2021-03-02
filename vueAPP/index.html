@@ -9,7 +9,16 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
         crossorigin="anonymous"></script>
-
+<style>
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        color: white;
+        text-align: center;
+    }
+</style>
 <body>
 <nav class="navbar navbar-dark bg-primary">
     <div class="container-fluid">
@@ -26,22 +35,24 @@
                 <hr>
                 <div class="row" v-if="relevantQ">
                     <div class="col">
-                    <p class="lead">Most Relevant Question</p>
-                    <b>{{relevantQ}}</b>
-                    <hr>
-                        </div>
+                        <p class="lead">Most Relevant Question</p>
+                        <b>{{ relevantQ }}</b>
+                        <hr>
+                    </div>
                 </div>
                 <div class="row" v-if="relevantA">
                     <div class="col">
-                    <p class="lead">Answer</p>
-                    <b>{{relevantA}}</b>
-                </div>
+                        <p class="lead">Answer</p>
+                        <b>{{ relevantA }}</b>
                     </div>
+                </div>
 
             </div>
         </div>
     </div>
-
+    <div class="footer">
+        <p>v1.0.0-pericles</p>
+    </div>
 </div>
 
 </body>
