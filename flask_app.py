@@ -1,6 +1,5 @@
 from flask import request
 from bert_functions import answer_query
-from flask_cors import CORS
 from flask import jsonify
 from flask_jwt import JWT, jwt_required
 from werkzeug.security import safe_str_cmp
@@ -21,7 +20,6 @@ def identity(payload):
 app.debug = True
 app.config['SECRET_KEY'] = 'super-secret'
 jwt = JWT(app, authenticate, identity)
-CORS(app)
 
 if __name__ == "__main__":
     app.run()
