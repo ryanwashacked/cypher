@@ -127,7 +127,7 @@
                         'Authorization': "JWT " + this.jwt
                     }
                 };
-                axios.get('http://34.107.68.82:8000/?question=' + this.question, headers).then(
+                axios.get('http://34.89.136.238:8000/?question=' + this.question, headers).then(
                     response => (this.relevantQ = response['data'][0][0], this.relevantA = response['data'][0][1], this.responseData = response['data'])
                 )
             },
@@ -139,7 +139,7 @@
                 e.preventDefault();
                 const credentials = {username: this.username, password: this.password};
                 this.errorMessage = '';
-                axios.post("http://34.107.68.82:8000/auth", credentials)
+                axios.post("http://34.89.136.238:8000/auth", credentials)
                     .then(response => (this.jwt = response.data.access_token, localStorage.jwt = response.data.access_token))
                     .catch(error => {
                         this.errorMessage = error.message;
