@@ -1,3 +1,4 @@
+elasticsearch
 absl-py==0.11.0
 astor==0.8.1
 bert-serving-client==1.10.0
