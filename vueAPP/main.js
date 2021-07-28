@@ -80,7 +80,7 @@ const RFP_BOT = {
                     'Authorization': "JWT " + this.jwt
                 }
             };
-            axios.get('http://127.0.0.1:8080/?question=' + this.question, headers).then(
+            axios.get('http://10.51.101.102:8080/?question=' + this.question, headers).then(
                 response => (this.loading = false, this.relevantQ = response['data'][0][0], this.relevantA = response['data'][0][1], this.relevantQScore = response['data'][0][2], this.responseData = response['data'])
             ).catch(error => {
                 this.errorMessage = error.message;
@@ -98,7 +98,7 @@ const RFP_BOT = {
             e.preventDefault();
             const credentials = {username: this.username, password: this.password};
             this.errorMessage = '';
-            axios.post("http://127.0.0.1:8080/auth", credentials)
+            axios.post("http://10.51.101.102:8080/auth", credentials)
                 .then(response => (this.jwt = response.data.access_token, localStorage.jwt = response.data.access_token))
                 .catch(error => {
                     this.errorMessage = error.message;
