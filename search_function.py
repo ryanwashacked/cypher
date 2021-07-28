@@ -2,9 +2,9 @@ from elasticsearch import Elasticsearch
 from bert_serving.client import BertClient
 import itertools
 
-bc = BertClient(ip = '34.107.68.82', check_length = False)
-es = Elasticsearch(['https://50fa1120951243058493bdc13de957ce.europe-west3.gcp.cloud.es.io:9243'],
-				   http_auth = ('elastic', 'BMLaGZHcBnHWixkqxMpODlnn'))
+bc = BertClient(ip = '10.51.101.101', check_length = False)
+es = Elasticsearch(['https://i-o-optimized-deployment-8791cf.es.eu-central-1.aws.cloud.es.io:9243'],
+				   http_auth = ('elastic', 'EhF2kCmpiwPCYy3VDKBV0II0'))
 
 
 def remove_duplicates_from_list(combined):
@@ -47,7 +47,7 @@ def findRelevantHits(in_query):
 	result = {'bert': [], 'mlt': []}
 
 	for metric, query in queries.items():
-		body = {"query": query, "size": 10, "_source": ["question", "answer"]}
+		body = {"query": query, "size": 2, "_source": ["question", "answer"]}
 		response = es.search(index = 'questions_answers_vectors', body = body, request_timeout = 120)
 		result[metric] = [[a['_source']['question'], a['_source']['answer'], a['_score']] for a in
 						  response['hits']['hits']]
@@ -56,5 +56,4 @@ def findRelevantHits(in_query):
 	combined_results = sorted(combined_results, key = lambda result_entry: result_entry[2], reverse = True)
 	combined_results = list(combined_results for combined_results, _ in itertools.groupby(combined_results))
 	combined_results = remove_duplicates_from_list(combined_results)
-
 	return combined_results

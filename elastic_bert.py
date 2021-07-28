@@ -3,9 +3,9 @@ from elasticsearch.helpers import bulk
 from bert_serving.client import BertClient
 import csv
 
-bc = BertClient(ip = '34.107.68.82', check_length = False)
-es = Elasticsearch(['https://50fa1120951243058493bdc13de957ce.europe-west3.gcp.cloud.es.io:9243'],
-				   http_auth = ('elastic', 'BMLaGZHcBnHWixkqxMpODlnn'))
+bc = BertClient(ip = '10.51.101.101', check_length = False)
+es = Elasticsearch(['https://i-o-optimized-deployment-8791cf.es.eu-central-1.aws.cloud.es.io:9243'],
+				   http_auth = ('elastic', 'EhF2kCmpiwPCYy3VDKBV0II0'))
 
 es.indices.delete(index = 'questions_answers_vectors', ignore = [400, 404])
 
