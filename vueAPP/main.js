@@ -79,6 +79,7 @@ const RFP_BOT = {
         },
         search() {
             router.push({path: 'search', query: {question: this.question}});
+            console.log(this.question)
             if (0 !== this.question.trim().length) {
                 this.loading = true;
                 const headers = {
