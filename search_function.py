@@ -33,27 +33,34 @@ def findRelevantHits(in_query):
 				}
 			}
 		},
+		'search': {
+			"match": {
+				"question": in_query
+			}
+		},
 		'mlt': {
 			"more_like_this": {
 				"fields": ["question"],
 				"like": in_query,
 				"min_term_freq": 1,
-				"max_query_terms": 50,
-				"min_doc_freq": 1
+				"max_query_terms": 150,
+				"min_doc_freq": 5
 			}
 		}
 	}
 
-	result = {'bert': [], 'mlt': []}
+	result = {'bert': [], 'mlt': [], 'search': []}
 
 	for metric, query in queries.items():
-		body = {"query": query, "size": 2, "_source": ["question", "answer"]}
+		body = {"query": query, "size": 3, "_source": ["question", "answer", "supported", "category", "subcategory"]}
 		response = es.search(index = 'questions_answers_vectors', body = body, request_timeout = 120)
-		result[metric] = [[a['_source']['question'], a['_source']['answer'], a['_score']] for a in
+		result[metric] = [[a['_source']['question'], a['_source']['answer'], a['_score'], a['_source']['supported'],
+						   a['_source']['category'], a['_source']['subcategory']] for a in
 						  response['hits']['hits']]
 
-	combined_results = result['bert'] + result['mlt']
+	combined_results = result['bert'] + result['search']
 	combined_results = sorted(combined_results, key = lambda result_entry: result_entry[2], reverse = True)
 	combined_results = list(combined_results for combined_results, _ in itertools.groupby(combined_results))
 	combined_results = remove_duplicates_from_list(combined_results)
+
 	return combined_results

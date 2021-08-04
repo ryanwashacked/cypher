@@ -11,6 +11,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
             crossorigin="anonymous"></script>
+       <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.6/dist/linkify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.6/dist/linkify-element.min.js"></script>
     <!-- Lastly add this package -->
     <script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3"></script>
     <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3/dist/vue-loading.css" rel="stylesheet">
@@ -34,14 +36,14 @@
     <!-- component matched by the route will render here -->
 
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary justify-content-between">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary justify-content-between pb-0">
         <a class="navbar-brand" href="#"><span class="navbar-brand mb-0 h1"><i class="bi bi-cpu-fill"></i> Cypher <small
                 style="font-size:50%;">An Epignosis bot</small></span></a></a>
 
         <div v-if="jwt" class="expand justify-content-between" id="navbarNavAltMarkup">
             <div class="navbar-nav mr-auto">
-                <router-link class="nav-item nav-link" to="/search">Search</router-link>
-                <router-link class="nav-item nav-link" to="/upload">Upload</router-link>
+                <!--   <router-link class="nav-item nav-link" to="/search">Search</router-link>
+                    <router-link class="nav-item nav-link" to="/upload">Upload</router-link> -->
                 <form class="form-inline my-2 my-lg-0 ml-3">
                     <button type="submit" @click="logout" class="btn btn-danger mb-2">Logout</button>
                 </form>
@@ -51,11 +53,7 @@
     </nav>
     <div class="container-fluid">
 
-        <div v-if="errorMessage" class="row">
-            <div class="alert alert-warning alert-dismissible fade show col mt-3">
-                <p>{{ errorMessage }}</p>
-            </div>
-        </div>
+
         <div v-if="jwt==''" class="container">
             <div class="row">
                 <div class="col-md-5 offset-md-3 mt-5">
@@ -86,49 +84,61 @@
             </div>
         </div>
         <div v-if="jwt !=''" class="container">
+            <div v-if="errorMessage" class="row">
+                <div class="alert alert-warning alert-dismissible fade show col mt-3">
+                    <p>{{ errorMessage }}</p>
+                </div>
+            </div>
             <div class="row">
                 <div class="col mt-5">
                     <div>
                         <input v-model="question" placeholder="How can I help?" @change="search()"
-                               class="form-control form-control-lg" type="text" placeholder=".form-control-lg"
+                               class="form-control form-control-lg" type="search" placeholder=".form-control-lg"
                                aria-label=".form-control-lg example">
                         <hr>
                     </div>
                 </div>
-                <div class="col-md-12">
-                    <div class="row" v-if="loading">
+                <div class="container">
+                    <div class="row">
                         <div class="col-md-12">
-                            <div class="spinner-grow spinner-grow-sm" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-                            <small> Please wait...</small></div>
-                    </div>
-                    <router-view></router-view>
-                        <div class="row mt-2" :class="{ 'isLoading': loading }" v-if="relevantQ">
-                            <div class="col">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <span>Most relevant result</span>
-                                        <span class="float-right"><small><b>Score: </b><i
-                                                class="text-info">{{ relevantQScore }}</i></small></span>
+                            <div class="row" v-if="loading">
+                                <div class="col-md-12">
+                                    <div class="spinner-grow spinner-grow-sm" role="status">
+                                        <span class="sr-only">Loading...</span>
                                     </div>
-                                    <div class="card-body">
-                                        <h4 class="card-title">{{ relevantQ }}</h4>
-                                        <hr>
-                                        <blockquote class="blockquote">
-                                            <p class="card-text text-light" id="answer_text">
-                                                {{ relevantA }}
+                                    <small> Please wait...</small></div>
+                            </div>
+                            <router-view></router-view>
+                            <div class="row mt-2" :class="{ 'isLoading': loading }" v-if="relevantQ">
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <span>Most relevant result</span>
+                                            <span class="float-right"><small><b>Score: </b><i
+                                                    class="text-info">{{ relevantQScore }}</i></small></span>
+                                        </div>
+                                        <div class="card-body">
+                                            <h4 class="card-title">{{ relevantQ }}</h4>
+                                            <hr>
+
+                                            <p v-if="relevantQSupported.length !== 0">Answer: <span
+                                                    v-bind:class="{'text-danger' : (relevantQSupported.toLowerCase() === 'no'), 'text-success' : (relevantQSupported.toLowerCase() === 'yes')}">{{ relevantQSupported }}</span>
                                             </p>
-                                        </blockquote>
+                                            <b v-if="relevantA.length !== 0">Explanation:</b>
+                                            <p class="card-text text-light" id="answer_text" v-html="relevantA" v-linkified>
+                                            </p>
+
+                                        </div>
                                     </div>
+                                    <hr>
                                 </div>
-                                <hr>
+                            </div>
+                            <div v-if="responseData">
+                                <relevant-results v-bind:loading="loading" v-bind:response-data="responseData"
+                                                  :method="handleLinkClick"></relevant-results>
                             </div>
                         </div>
-                        <div v-if="responseData">
-                            <relevant-results v-bind:loading="loading" v-bind:response-data="responseData"
-                                              :method="handleLinkClick"></relevant-results>
-                        </div>
+                    </div>
                 </div>
             </div>
         </div>

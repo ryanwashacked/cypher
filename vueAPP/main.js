@@ -16,6 +16,7 @@ const RelevantResults = Vue.component('relevant-results', {
                                     </tr>
                                     </thead>
                                     <tbody>
+
                                     <tr v-for="(item, index) in responseData">
                                         <td><a href="javascript:void(0)"
                                                @click="mymethod(item[0])">{{ item[0] }}</a></td>
@@ -49,6 +50,10 @@ const router = new VueRouter({
     routes // short for `routes: routes`
 });
 
+Vue.directive('linkified', function (el, binding) {
+    linkifyElement(el, binding.value);
+});
+
 const RFP_BOT = {
     router,
     el: "#counter",
@@ -73,21 +78,32 @@ const RFP_BOT = {
             localStorage.jwt = '';
         },
         search() {
-            router.push({ path: 'search', query: { question: this.question}});
-            this.loading = true;
-            const headers = {
-                headers: {
-                    'Authorization': "JWT " + this.jwt
-                }
-            };
-            axios.get('http://10.51.101.102:8080/?question=' + this.question, headers).then(
-                response => (this.loading = false, this.relevantQ = response['data'][0][0], this.relevantA = response['data'][0][1], this.relevantQScore = response['data'][0][2], this.responseData = response['data'])
-            ).catch(error => {
-                this.errorMessage = error.message;
-                this.jwt = '';
-                this.loading = false;
-                console.error("There was an error!", error);
-            });
+            router.push({path: 'search', query: {question: this.question}});
+            if (0 !== this.question.trim().length) {
+                this.loading = true;
+                const headers = {
+                    headers: {
+                        'Authorization': "JWT " + this.jwt
+                    }
+                };
+                axios.get('http://10.51.101.102:8080/?question=' + this.question, headers).then(
+                    response => (
+                        this.loading = false,
+                            this.relevantQ = response['data'][0][0],
+                            this.relevantA = response['data'][0][1],
+                            this.relevantQScore = response['data'][0][2],
+                            this.relevantQSupported = response['data'][0][3],
+                            this.relevantQCategory = response['data'][0][4],
+                            this.relevantQSubCategory = response['data'][0][5],
+                            this.responseData = response['data'].slice(1))
+                ).catch(error => {
+                    this.errorMessage = error.message;
+                    this.jwt = '';
+                    this.loading = false;
+                    console.error("There was an error!", error);
+                });
+            }
+
         },
         handleLinkClick(item) {
             this.question = item;
