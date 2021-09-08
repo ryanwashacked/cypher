@@ -5,8 +5,8 @@ import time
 import csv
 
 bc = BertClient(ip = '10.51.101.101', check_length = False)
-es = Elasticsearch(['https://cypher-poc.es.eu-central-1.aws.cloud.es.io:9243'],
-				   http_auth = ('elastic', 'BHLn0dmTzD3lwHDv5prt9ldR'))
+es = Elasticsearch(['https://cypher.es.eu-central-1.aws.cloud.es.io:9243'],
+				   http_auth = ('elastic', 'UVrF6kyW58KrBzxoffp2YRKH'))
 
 es.indices.delete(index = 'questions_answers_vectors', ignore = [400, 404])
 

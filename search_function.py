@@ -3,8 +3,8 @@ from bert_serving.client import BertClient
 import itertools
 
 bc = BertClient(ip = '10.51.101.101', check_length = False)
-es = Elasticsearch(['https://cypher-poc.es.eu-central-1.aws.cloud.es.io:9243'],
-				   http_auth = ('elastic', 'BHLn0dmTzD3lwHDv5prt9ldR'))
+es = Elasticsearch(['https://cypher.es.eu-central-1.aws.cloud.es.io:9243'],
+				   http_auth = ('elastic', 'UVrF6kyW58KrBzxoffp2YRKH'))
 
 
 def remove_duplicates_from_list(combined):
